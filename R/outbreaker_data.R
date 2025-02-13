@@ -150,7 +150,9 @@ outbreaker_data <- function(..., data = list(...)) {
   }
 
   ## CHECK POTENTIAL ANCESTRIES
-  if(!is.null(data$dates)) {
+  # if dates are not NULL and can_be_ances is NULL, calculate it, otherwise take the default (imported values)
+  
+  if(is.null(data$can_be_ances) & !is.null(data$dates)) {
     ## get temporal ordering constraint:
     ## canBeAnces[i,j] is 'i' can be ancestor of 'j'
     ## Calculate the serial interval from w_dens and f_dens
