@@ -12,8 +12,15 @@
 ## #'
 ## #' @export
 ## #'
-outbreaker_mcmc_store <- function(param_current, param_store, data, config,
-                                  likelihoods, priors, step) {
+outbreaker_mcmc_store <- function(
+  param_current,
+  param_store,
+  data,
+  config,
+  likelihoods,
+  priors,
+  step
+) {
   ## UPDATE COUNTER
   counter <- param_store$counter <- param_store$counter + 1
 
@@ -21,9 +28,28 @@ outbreaker_mcmc_store <- function(param_current, param_store, data, config,
   param_store$step[counter] <- step
 
   ## STORE LIKELIHOOD, PRIOR, POSTERIOR
-  param_store$like[counter] <- cpp_ll_all(data, param_current, NULL, likelihoods)
+  param_store$like[counter] <- cpp_ll_all(
+    data,
+    param_current,
+    NULL,
+    likelihoods
+  )
+
+  ## STORE SPECIFIC LIKELIHOOD
+  param_store$like_timing_infections[counter] <- cpp_ll_timing_infections(
+    data,
+    param_current,
+    NULL
+  )
+  param_store$like_timing_sampling[counter] <- cpp_ll_timing_sampling(
+    data,
+    param_current,
+    NULL
+  )
+
   param_store$prior[counter] <- cpp_prior_all(param_current, config, priors)
-  param_store$post[counter] <- param_store$like[counter] + param_store$prior[counter]
+  param_store$post[counter] <- param_store$like[counter] +
+    param_store$prior[counter]
 
   ## PARAMETERS AND AUGMENTED DATA
   param_store$mu[counter] <- param_current$mu
@@ -31,13 +57,15 @@ outbreaker_mcmc_store <- function(param_current, param_store, data, config,
   param_store$eps[[counter]] <- param_current$eps
   param_store$eta[[counter]] <- param_current$eta
   param_store$lambda[[counter]] <- param_current$lambda
+
   param_store$alpha[[counter]] <- param_current$alpha
   param_store$t_inf[[counter]] <- param_current$t_inf
-  if(!is.null(data$ctd_timed)) param_store$t_onw[[counter]] <- param_current$t_onw
-  if(!is.null(data$ctd_timed)) param_store$tau[[counter]] <- param_current$tau
-  if(!is.null(data$ctd_timed)) param_store$place[[counter]] <- param_current$place
+  if (!is.null(data$ctd_timed))
+    param_store$t_onw[[counter]] <- param_current$t_onw
+  if (!is.null(data$ctd_timed)) param_store$tau[[counter]] <- param_current$tau
+  if (!is.null(data$ctd_timed))
+    param_store$place[[counter]] <- param_current$place
   param_store$kappa[[counter]] <- param_current$kappa
 
   return(param_store)
 }
-

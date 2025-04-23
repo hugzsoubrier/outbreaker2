@@ -167,6 +167,9 @@ directionality will be taken from there.}
 intervals are epidemiologically possible. If not, ancestries with
 negative serial intervals are discarded.}
 
+\item{genetic_model}{a character string indicating which genetic
+model to use: one of "default", "mrca" or "phylogeny".}
+
 \item{pb}{a logical indicating if a progress bar should be displayed.}
 
 }
